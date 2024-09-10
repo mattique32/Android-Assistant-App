@@ -66,7 +66,7 @@ wearInput = "1.2.0-alpha02"
 webkit = "1.11.0"
 wear-remote-interactions = "1.0.0"
 workRuntimeKtx = "2.9.1"
-horologist = "0.5.28"
+horologist = "0.6.18"
 zxing = "4.3.0"
 
 [plugins]
