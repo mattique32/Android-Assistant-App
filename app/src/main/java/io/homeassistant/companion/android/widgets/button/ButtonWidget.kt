@@ -61,12 +61,14 @@ class ButtonWidget : AppWidgetProvider() {
         internal const val EXTRA_ACTION_DATA = "EXTRA_SERVICE_DATA"
         internal const val EXTRA_LABEL = "EXTRA_LABEL"
         internal const val EXTRA_ICON_NAME = "EXTRA_ICON_NAME"
+        internal const val EXTRA_ICON_COLOR = "EXTRA_ICON_COLOR"
         internal const val EXTRA_BACKGROUND_TYPE = "EXTRA_BACKGROUND_TYPE"
         internal const val EXTRA_TEXT_COLOR = "EXTRA_TEXT_COLOR"
         internal const val EXTRA_REQUIRE_AUTHENTICATION = "EXTRA_REQUIRE_AUTHENTICATION"
 
         // Vector icon rendering resolution fallback (if we can't infer via AppWidgetManager for some reason)
         private const val DEFAULT_MAX_ICON_SIZE = 512
+        private const val SMALL_MAX_ICON_SIZE = 80
     }
 
     @Inject
@@ -200,8 +202,11 @@ class ButtonWidget : AppWidgetProvider() {
                 size = IconicsSize.dp(24)
             }
             val icon = DrawableCompat.wrap(iconDrawable)
+            widget?.iconColor?.let {
+                setCustomColorToIcon(it, this)
+            }
             if (widget?.backgroundType == WidgetBackgroundType.TRANSPARENT) {
-                setInt(R.id.widgetImageButton, "setColorFilter", textColor)
+                setInt(R.id.widgetImageButton, "setBackgroundColor", Color.TRANSPARENT)
             }
 
             // Determine reasonable dimensions for drawing vector icon as a bitmap
@@ -210,11 +215,11 @@ class ButtonWidget : AppWidgetProvider() {
             val maxWidth = (
                 awo?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, DEFAULT_MAX_ICON_SIZE)
                     ?: DEFAULT_MAX_ICON_SIZE
-                ).coerceAtLeast(16)
+                ).coerceAtLeast(16).coerceAtMost(SMALL_MAX_ICON_SIZE)
             val maxHeight = (
                 awo?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, DEFAULT_MAX_ICON_SIZE)
                     ?: DEFAULT_MAX_ICON_SIZE
-                ).coerceAtLeast(16)
+                ).coerceAtLeast(16).coerceAtMost(SMALL_MAX_ICON_SIZE)
             val width: Int
             val height: Int
             if (maxWidth > maxHeight) {
@@ -363,6 +368,7 @@ class ButtonWidget : AppWidgetProvider() {
         val label: String? = extras.getString(EXTRA_LABEL)
         val requireAuthentication: Boolean = extras.getBoolean(EXTRA_REQUIRE_AUTHENTICATION)
         val icon: String = extras.getString(EXTRA_ICON_NAME) ?: "mdi:flash"
+        val iconColor: String? = extras.getString(EXTRA_ICON_COLOR)
         val backgroundType = BundleCompat.getSerializable(extras, EXTRA_BACKGROUND_TYPE, WidgetBackgroundType::class.java)
             ?: WidgetBackgroundType.DAYNIGHT
         val textColor: String? = extras.getString(EXTRA_TEXT_COLOR)
@@ -383,7 +389,7 @@ class ButtonWidget : AppWidgetProvider() {
                     "label: " + label
             )
 
-            val widget = ButtonWidgetEntity(appWidgetId, serverId, icon, domain, action, actionData, label, backgroundType, textColor, requireAuthentication)
+            val widget = ButtonWidgetEntity(appWidgetId, serverId, icon, domain, action, actionData, label, iconColor, backgroundType, textColor, requireAuthentication)
             buttonWidgetDao.add(widget)
 
             // It is the responsibility of the configuration activity to update the app widget
@@ -392,5 +398,15 @@ class ButtonWidget : AppWidgetProvider() {
             // it is just calling onUpdate manually here.
             onUpdate(context, AppWidgetManager.getInstance(context), intArrayOf(appWidgetId))
         }
+    }
+
+    private fun setCustomColorToIcon(colorString: String, remoteViews: RemoteViews) {
+        val validColor = try {
+            Color.parseColor(colorString)
+        } catch (e: Exception) {
+            null
+        }
+        remoteViews.setInt(R.id.widgetImageButton, "setColorFilter", validColor ?: Color.TRANSPARENT)
+        remoteViews.setInt(R.id.widgetImageButtonBackground, "setColorFilter", validColor ?: Color.TRANSPARENT)
     }
 }
