@@ -61,7 +61,6 @@ class ButtonWidgetConfigureActivity : BaseWidgetConfigureActivity() {
 
     @Inject
     lateinit var buttonWidgetDao: ButtonWidgetDao
-    override val dao get() = buttonWidgetDao
 
     private var actions = mutableMapOf<Int, HashMap<String, Action>>()
     private var entities = mutableMapOf<Int, HashMap<String, Entity<Any>>>()

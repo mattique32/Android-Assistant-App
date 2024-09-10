@@ -73,6 +73,9 @@ import io.homeassistant.companion.android.database.widget.TemplateWidgetDao
 import io.homeassistant.companion.android.database.widget.TemplateWidgetEntity
 import io.homeassistant.companion.android.database.widget.WidgetBackgroundTypeConverter
 import io.homeassistant.companion.android.database.widget.WidgetTapActionConverter
+import io.homeassistant.companion.android.database.widget.graph.GraphWidgetDao
+import io.homeassistant.companion.android.database.widget.graph.GraphWidgetEntity
+import io.homeassistant.companion.android.database.widget.graph.GraphWidgetHistoryEntity
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
 
@@ -86,6 +89,8 @@ import kotlinx.coroutines.runBlocking
         CameraWidgetEntity::class,
         MediaPlayerControlsWidgetEntity::class,
         StaticWidgetEntity::class,
+        GraphWidgetEntity::class,
+        GraphWidgetHistoryEntity::class,
         TemplateWidgetEntity::class,
         NotificationItem::class,
         LocationHistoryItem::class,
@@ -97,7 +102,7 @@ import kotlinx.coroutines.runBlocking
         Server::class,
         Setting::class
     ],
-    version = 47,
+    version = 48,
     autoMigrations = [
         AutoMigration(from = 24, to = 25),
         AutoMigration(from = 25, to = 26),
@@ -138,6 +143,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun cameraWidgetDao(): CameraWidgetDao
     abstract fun mediaPlayCtrlWidgetDao(): MediaPlayerControlsWidgetDao
     abstract fun staticWidgetDao(): StaticWidgetDao
+    abstract fun graphWidgetDao(): GraphWidgetDao
     abstract fun templateWidgetDao(): TemplateWidgetDao
     abstract fun notificationDao(): NotificationDao
     abstract fun locationHistoryDao(): LocationHistoryDao

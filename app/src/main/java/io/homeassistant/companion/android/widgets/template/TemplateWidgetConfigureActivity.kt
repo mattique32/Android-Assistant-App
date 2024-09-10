@@ -42,7 +42,6 @@ class TemplateWidgetConfigureActivity : BaseWidgetConfigureActivity() {
 
     @Inject
     lateinit var templateWidgetDao: TemplateWidgetDao
-    override val dao get() = templateWidgetDao
 
     private lateinit var binding: WidgetTemplateConfigureBinding
 

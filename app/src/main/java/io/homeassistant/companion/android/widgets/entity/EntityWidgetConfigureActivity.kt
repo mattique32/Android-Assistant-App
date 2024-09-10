@@ -52,7 +52,6 @@ class EntityWidgetConfigureActivity : BaseWidgetConfigureActivity() {
 
     @Inject
     lateinit var staticWidgetDao: StaticWidgetDao
-    override val dao get() = staticWidgetDao
 
     private var entities = mutableMapOf<Int, List<Entity<Any>>>()
 

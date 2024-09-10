@@ -43,7 +43,6 @@ class MediaPlayerControlsWidgetConfigureActivity : BaseWidgetConfigureActivity()
 
     @Inject
     lateinit var mediaPlayerControlsWidgetDao: MediaPlayerControlsWidgetDao
-    override val dao get() = mediaPlayerControlsWidgetDao
 
     private lateinit var binding: WidgetMediaControlsConfigureBinding
 
